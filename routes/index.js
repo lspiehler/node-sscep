@@ -9,14 +9,16 @@ router.get('/yo', function(req, res, next) {
 
 router.post('/test', function(req, res, next) {
   console.log(req.body);
-  sscep.GetCA({url: 'http://cyopki.com/scep/ToMdakJVdr'}, function(err, scep) {
+  sscep.GetCA({url: req.body.url, csr: req.body.csr, key: req.body.key, }, function(err, scep) {
     if(err) {
       console.log(err);
+      console.log(scep);
+      res.json(err);
     } else {
       console.log(scep);
+      res.json(scep);
     }
   });
-  res.json(req.body);
   //res.render('index', { title: 'Express' });
 });
 
