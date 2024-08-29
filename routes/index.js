@@ -13,10 +13,15 @@ router.post('/scep', function(req, res, next) {
     if(err) {
       console.log(err);
       console.log(scep);
-      res.json(err);
+      res.json({
+        error: err,
+        data: scep
+      });
     } else {
-      console.log(scep);
-      res.json(scep);
+      res.json({
+        error: false,
+        data: scep
+      });
     }
   });
   //res.render('index', { title: 'Express' });
