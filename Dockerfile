@@ -23,7 +23,7 @@ RUN mkdir -p /var/node
 
 WORKDIR /var/node
 
-ARG CACHE_DATE=2024-08-28
+ARG CACHE_DATE=2024-08-31
 
 RUN git clone https://github.com/lspiehler/node-sscep.git
 
@@ -31,4 +31,4 @@ WORKDIR /var/node/node-sscep
 
 RUN npm install
 
-CMD ["npm start"]
+CMD ["npm", "start"]
