@@ -9,7 +9,7 @@ router.get('/yo', function(req, res, next) {
 
 router.post('/scep', function(req, res, next) {
   console.log(req.body);
-  sscep.GetCA({url: req.body.url, csr: req.body.csr, key: req.body.key, }, function(err, scep) {
+  sscep.request({url: req.body.url, csr: req.body.csr, key: req.body.key, }, function(err, scep) {
     if(err) {
       console.log(err);
       console.log(scep);
