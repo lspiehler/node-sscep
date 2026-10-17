@@ -26,7 +26,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # short commit SHA (e.g. 71674ee) is the immutable tag to deploy; :master follows the newest master build
+      # short commit SHA (e.g. 71674ee) is the immutable tag to deploy; :master and :latest follow the newest master build
       - id: meta
         uses: docker/metadata-action@v6
         with:
@@ -34,6 +34,7 @@ jobs:
           tags: |
             type=sha,format=short,prefix=
             type=raw,value=master,enable={{is_default_branch}}
+            type=raw,value=latest,enable={{is_default_branch}}
 
       - uses: docker/build-push-action@v7
         with:
