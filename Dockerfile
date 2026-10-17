@@ -13,7 +13,13 @@ RUN git clone https://github.com/certnanny/sscep.git
 
 WORKDIR /usr/src/sscep
 
-#RUN git checkout b3f9798
+# pinned so the patch below applies; the patch makes sscep read the response with CMS instead of PKCS#7,
+# so it can decrypt responses for EC keys (key agreement) as well as RSA (certnanny/sscep#183)
+RUN git checkout cb3e539
+
+COPY sscep-cms.patch /tmp/sscep-cms.patch
+
+RUN git apply /tmp/sscep-cms.patch
 
 RUN ./bootstrap.sh && ./configure && make && make install
 
