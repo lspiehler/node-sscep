@@ -3,9 +3,13 @@ LABEL maintainer Lyas Spiehler
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN curl -sL https://deb.nodesource.com/setup_20.x | bash -
+# ubuntu:noble has no curl, so install it first; -f makes a failed download fail the build instead of falling back to Ubuntu's Node 18
+RUN apt update && apt install -y curl ca-certificates
 
-RUN apt update && apt install -y autoconf automake libtool pkg-config libssl-dev git build-essential nodejs npm
+RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash -
+
+# NodeSource's nodejs package includes npm
+RUN apt install -y autoconf automake libtool pkg-config libssl-dev git build-essential nodejs
 
 WORKDIR /usr/src
 
