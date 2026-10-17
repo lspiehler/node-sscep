@@ -1,0 +1,51 @@
+diff --git a/src/pkcs7.c b/src/pkcs7.c
+index 1a0005a..90368cd 100644
+--- a/src/pkcs7.c
++++ b/src/pkcs7.c
+@@ -557,7 +557,7 @@ int pkcs7_unwrap(struct scep *s) {
+ 	BIO				*pkcs7bio;
+ 	int				i, len, bytes, used;
+ 	STACK_OF(PKCS7_SIGNER_INFO)	*sk;
+-	PKCS7				*p7enc;
++	CMS_ContentInfo			*p7enc;
+ 	PKCS7_SIGNER_INFO		*si;
+ 	STACK_OF(X509_ATTRIBUTE)	*attribs;
+ 	char				*p;
+@@ -802,7 +802,7 @@ int pkcs7_unwrap(struct scep *s) {
+ 		recipientkey = rsa;
+ 	}
+ 
+-	p7enc = d2i_PKCS7_bio(outbio, NULL);
++	p7enc = d2i_CMS_bio(outbio, NULL);
+ 	if (p7enc == NULL) {
+ 		fprintf(stderr, "%s: cannot read inner PKCS#7\n", pname);
+ 		ERR_print_errors_fp(stderr);
+@@ -810,14 +810,14 @@ int pkcs7_unwrap(struct scep *s) {
+ 	}
+ 	if (d_flag) {
+ 		printf("%s: printing PEM fomatted PKCS#7\n", pname);
+-		PEM_write_PKCS7(stdout, p7enc);
++		PEM_write_CMS(stdout, p7enc);
+ 	}
+ 
+ 	/* Decrypt the data  */
+ 	outbio = BIO_new(BIO_s_mem());
+ 	if (d_flag)
+ 		printf("%s: decrypting inner PKCS#7\n",pname);
+-	if (PKCS7_decrypt(p7enc, recipientkey, recipientcert, outbio, 0) == 0) {
++	if (CMS_decrypt(p7enc, recipientkey, recipientcert, NULL, outbio, 0) == 0) {
+ 		fprintf(stderr, "%s: error decrypting inner PKCS#7\n", pname);
+ 		ERR_print_errors_fp(stderr);
+ 		exit (SCEP_PKISTATUS_P7);
+diff --git a/src/sscep.h b/src/sscep.h
+index c0cab0f..625d369 100644
+--- a/src/sscep.h
++++ b/src/sscep.h
+@@ -58,6 +58,7 @@
+ #include <openssl/x509.h>
+ #include <openssl/x509v3.h>
+ #include <openssl/pkcs7.h>
++#include <openssl/cms.h>
+ #include <openssl/err.h>
+ #include <openssl/pem.h>
+ #include <openssl/rand.h>
