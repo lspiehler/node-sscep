@@ -25,15 +25,10 @@ RUN ./bootstrap.sh && ./configure && make && make install
 
 RUN rm -rf /usr/src/sscep
 
-RUN mkdir -p /var/node
-
-WORKDIR /var/node
-
-ARG CACHE_DATE=2024-08-31
-
-RUN git clone https://github.com/lspiehler/node-sscep.git
-
 WORKDIR /var/node/node-sscep
+
+# build from the checked-out code, so the image matches the commit it's tagged with
+COPY . .
 
 RUN npm install
 
